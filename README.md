@@ -22,12 +22,14 @@ This Flask application calculates the shortest path between two points on a grap
 
 1. **Calculate Shortest Path:**
    Send a POST request to http://127.0.0.1:5000/calculate_shortest_path with the following JSON payload:
-   ```json
-   {
+```yaml
+POST /calculate_shortest_path
+
+{
   "start_point": [latitude, longitude],
   "end_point": [latitude, longitude],
   "include_kml": true/false
-   }```
+}
    start_point: Coordinates of the starting point.
    end_point: Coordinates of the ending point.
    include_kml: Boolean indicating whether to include a KML file in the response.
