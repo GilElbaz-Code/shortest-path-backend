@@ -38,7 +38,7 @@ POST /calculate_shortest_path
    
    include_kml: Boolean indicating whether to include a KML file in the response.
 
-3. **Response:**
+2. **Response:**
    The response will contain either the shortest path or a download link for the KML file.
    If include_kml is set to true, the response will include the KML file.
    If include_kml is set to false, the response will contain the shortest path.
