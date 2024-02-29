@@ -7,7 +7,7 @@ This Flask application calculates the shortest path between two points on a grap
 1. **Clone the repository:**
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/GilElbaz-Code/shortest_path
    cd shortest_path_calculator
 
 2. **Install dependencies:**
