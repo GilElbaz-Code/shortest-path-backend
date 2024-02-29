@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 
 from graph_builder import GraphBuilder
@@ -43,8 +43,8 @@ def calculate_shortest_path():
         if not (start and end):
             return jsonify({'error': 'Invalid input format. Expected start and end coordinates.'}), 400
 
-        start = Coordinates(latitude=float(request_input['start']['x']), longitude=float(request_input['start']['y']))
-        end = Coordinates(latitude=float(request_input['end']['x']), longitude=float(request_input['end']['y']))
+        start = Coordinates(latitude=float(start[0]), longitude=float(start[1]))
+        end = Coordinates(latitude=float(end[0]), longitude=float(end[1]))
 
         # Find the closest points and compute the shortest path
 
@@ -53,11 +53,12 @@ def calculate_shortest_path():
         shortest_path = graph_processor.compute_shortest_path(start=closest_point_start, end=closest_point_end)
 
         if kml:
-            # todo: fix kml generation and response
             # Generate KML file and return download link
-            kml_shortest_path = kml_generator.generate_shortest_path_kml_response(shortest_path=shortest_path,
-                                                                                  kml_file_path="shortest_path.kml")
-            return kml_shortest_path, 200
+            kml_shortest_path = kml_generator.generate_kml_file(shortest_path=shortest_path)
+
+            return send_file(kml_shortest_path,
+                             mimetype='application/vnd.google-earth.kml+xml',
+                             as_attachment=True, download_name='shortest_path.kml')
 
         return jsonify({'path': shortest_path}), 200
     except (ValueError, TypeError) as e:
