@@ -1,5 +1,7 @@
 import networkx as nx
 import simplekml
+from flask import send_file
+from tempfile import NamedTemporaryFile
 
 
 class KMLGenerator:
@@ -18,4 +20,7 @@ class KMLGenerator:
         line.style.linestyle.width = 3
         line.style.linestyle.color = simplekml.Color.blue
 
-        kml.save(path=kml_file_path)
+        with NamedTemporaryFile(suffix='.kml', delete=False) as temp_kml:
+            kml.save(temp_kml.name)
+
+        return send_file(temp_kml.name, as_attachment=True, download_name=kml_file_path)
