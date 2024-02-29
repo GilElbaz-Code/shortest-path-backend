@@ -30,6 +30,7 @@ POST /calculate_shortest_path
   "end_point": [latitude, longitude],
   "include_kml": true/false
 }
+```
    start_point: Coordinates of the starting point.
    end_point: Coordinates of the ending point.
    include_kml: Boolean indicating whether to include a KML file in the response.
