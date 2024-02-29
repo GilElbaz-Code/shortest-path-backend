@@ -6,9 +6,25 @@ from tempfile import NamedTemporaryFile
 
 class KMLGenerator:
     def __init__(self, graph: nx.Graph):
+        """
+        Initialize the KMLGenerator with the given graph.
+
+        Parameters:
+        - graph (nx.Graph): Graph object representing the geographical network.
+        """
         self.graph = graph
 
     def generate_shortest_path_kml(self, shortest_path: list, kml_file_path: str):
+        """
+        Generate a KML file for the shortest path in the graph.
+
+        Parameters:
+        - shortest_path (list): List of nodes representing the shortest path.
+        - kml_file_path (str): File path for the generated KML file.
+
+        Returns:
+        - flask.Response: Flask Response object containing the generated KML file.
+        """
         kml = simplekml.Kml()
 
         for node, data in self.graph.nodes(data=True):
@@ -23,4 +39,4 @@ class KMLGenerator:
         with NamedTemporaryFile(suffix='.kml', delete=False) as temp_kml:
             kml.save(temp_kml.name)
 
-        return send_file(temp_kml.name, as_attachment=True, download_name=kml_file_path)
+            return send_file(temp_kml.name, as_attachment=True, download_name=kml_file_path)
