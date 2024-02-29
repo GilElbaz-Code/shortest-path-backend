@@ -7,8 +7,8 @@ This Flask application calculates the shortest path between two points on a grap
 1. **Clone the repository:**
 
    ```bash
-   git clone <repository_url>
-   cd shortest_path_calculator
+   git clone https://github.com/GilElbaz-Code/shortest_path
+   cd shortest_path
 
 2. **Install dependencies:**
    pip install -r requirements.txt
@@ -22,13 +22,20 @@ This Flask application calculates the shortest path between two points on a grap
 
 1. **Calculate Shortest Path:**
    Send a POST request to http://127.0.0.1:5000/calculate_shortest_path with the following JSON payload:
-   {
+```yaml
+POST /calculate_shortest_path
+
+{
   "start_point": [latitude, longitude],
   "end_point": [latitude, longitude],
   "include_kml": true/false
-   }
+}
+```
+
    start_point: Coordinates of the starting point.
+   
    end_point: Coordinates of the ending point.
+   
    include_kml: Boolean indicating whether to include a KML file in the response.
 
 2. **Response:**
