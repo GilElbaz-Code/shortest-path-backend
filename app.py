@@ -10,7 +10,8 @@ graph_builder = GraphBuilder(json_file_path="./data/graph_example.json")
 
 path_finder = PathFinder(graph=graph_builder.graph)
 
-kml_generator = KMLGenerator().generate_kml(graph=graph_builder.graph, kml_file_path='example')
+kml_generator = KMLGenerator(graph=graph_builder.graph)
+
 
 @app.route('/calculate_shortest_path', methods=['POST'])
 def calculate_shortest_path():
@@ -22,6 +23,8 @@ def calculate_shortest_path():
         closest_point_start = path_finder.find_closest_point(coord=start)
         closest_point_end = path_finder.find_closest_point(coord=end)
         shortest_path = path_finder.compute_shortest_path(start=closest_point_start, end=closest_point_end)
+        kml_shortest_path = kml_generator.generate_shortest_path_kml(shortest_path=shortest_path,
+                                                                     kml_file_path="shortest_path.kml")
         return jsonify({'path': shortest_path}), 200
     except Exception as e:
         error_message = str(e)

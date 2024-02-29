@@ -24,7 +24,7 @@ class GraphBuilder:
                 target_node = tuple(target)
                 graph.add_node(node_for_adding=target_node, coordinates=target_node)
                 graph.add_edge(u_of_edge=source_node, v_of_edge=target_node)
-        plt.figure()
-        nx.draw(graph)
-        plt.show()
+        # plt.figure()
+        # nx.draw(graph)
+        # plt.show()
         return graph

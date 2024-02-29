@@ -3,12 +3,19 @@ import simplekml
 
 
 class KMLGenerator:
-    @staticmethod
-    def generate_kml(graph: nx.Graph, kml_file_path: str):
+    def __init__(self, graph: nx.Graph):
+        self.graph = graph
+
+    def generate_shortest_path_kml(self, shortest_path: list, kml_file_path: str):
         kml = simplekml.Kml()
 
-        for node, data in graph.nodes(data=True):
+        for node, data in self.graph.nodes(data=True):
             coordinates = data['coordinates']
             kml.newpoint(name=str(node), coords=[coordinates])
 
-        kml.save(f'{kml_file_path}.kml')
+        line = kml.newlinestring(name='Shortest Path',
+                                 coords=[self.graph.nodes[node]['coordinates'] for node in shortest_path])
+        line.style.linestyle.width = 3
+        line.style.linestyle.color = simplekml.Color.blue
+
+        kml.save(path=kml_file_path)
