@@ -3,6 +3,10 @@ import networkx as nx
 
 
 class GraphBuilder:
+    """
+    Class responsible for building a graph from a JSON file using NetworkX.
+    """
+
     def __init__(self, json_file_path: str):
         """
         Initialize the GraphBuilder with the given JSON file path and build the graph.
@@ -25,7 +29,7 @@ class GraphBuilder:
         """
         return tuple(map(float, source_str.strip('()').split(',')))
 
-    def build_graph(self, json_file_path):
+    def build_graph(self, json_file_path: str) -> nx.Graph:
         """
         Build a graph from the provided JSON file.
 

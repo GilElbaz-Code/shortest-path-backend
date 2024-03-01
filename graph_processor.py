@@ -1,7 +1,12 @@
 import networkx as nx
 from scipy.spatial.distance import euclidean
 
+
 class GraphProcessor:
+    """
+    Class responsible for processing a geographical network represented by a graph.
+    """
+
     def __init__(self, graph: nx.Graph):
         """
         Initialize the GraphProcessor with the given graph.
