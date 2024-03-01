@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
-
 from constants import Constants
 from graph_builder import GraphBuilder
 from kml_generator import KMLGenerator
@@ -16,6 +15,10 @@ graph_processor = GraphProcessor(graph=graph_builder.graph)
 kml_generator = KMLGenerator(graph=graph_builder.graph)
 
 Coordinates = namedtuple('Coordinates', ['latitude', 'longitude'])
+
+
+def wrap_response(data, status_code=200):
+    return jsonify({'data': data}), status_code
 
 
 @app.route('/calculate_shortest_path', methods=['POST'])
@@ -41,7 +44,7 @@ def calculate_shortest_path():
         kml_requested = request_input.get('kml', False)
 
         if not (start and end):
-            return jsonify({'error': 'Invalid input format. Expected start and end coordinates.'}), 400
+            return wrap_response({'error': 'Invalid input format. Expected start and end coordinates.'}, 400)
 
         start = Coordinates(latitude=float(start.get('x')), longitude=float(start.get('y')))
         end = Coordinates(latitude=float(end.get('x')), longitude=float(end.get('y')))
@@ -59,10 +62,10 @@ def calculate_shortest_path():
                              as_attachment=True,
                              download_name='shortest_path.kml')
 
-        return jsonify({'path': shortest_path}), 200
+        return wrap_response({'path': shortest_path})
     except (ValueError, TypeError) as e:
         error_message = str(e)
-        return jsonify({'error': error_message}), 500
+        return wrap_response({'error': error_message}, 500)
 
 
 if __name__ == '__main__':
