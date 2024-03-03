@@ -21,6 +21,7 @@ kml_generator = KMLGenerator(graph=graph_builder.graph)
 # Define a namedtuple for coordinates with 'latitude' and 'longitude' fields
 Coordinates = namedtuple('Coordinates', ['latitude', 'longitude'])
 
+
 # Define a Flask route for handling POST requests to calculate the shortest path
 @app.route('/calculate_shortest_path', methods=['POST'])
 def calculate_shortest_path():
@@ -61,7 +62,7 @@ def calculate_shortest_path():
             return send_file(kml_shortest_path,
                              mimetype=Constants.KML_MIMETYPE,
                              as_attachment=True,
-                             download_name='shortest_path.kml')
+                             download_name='shortest_path.kml'), 200
 
         # If KML is not requested, return the JSON response with the shortest path
         return jsonify({'path': shortest_path}), 200
@@ -70,6 +71,7 @@ def calculate_shortest_path():
     except (ValueError, TypeError) as e:
         error_message = str(e)
         return jsonify({'error': error_message}), 500
+
 
 # Run the Flask application if the script is executed directly
 if __name__ == '__main__':
