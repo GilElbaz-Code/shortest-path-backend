@@ -14,10 +14,10 @@ class GraphBuilder:
         Parameters:
         - json_file_path (str): Path to the JSON file containing graph data.
         """
-        self.graph = self.build_graph(json_file_path=json_file_path)
+        self.graph = self._build_graph(json_file_path=json_file_path)
 
     @staticmethod
-    def _parse_source_node(source_str: str):
+    def _parse_source_node(source_str: str) -> tuple:
         """
         Parse the source node from a string representation.
 
@@ -29,7 +29,7 @@ class GraphBuilder:
         """
         return tuple(map(float, source_str.strip('()').split(',')))
 
-    def build_graph(self, json_file_path: str) -> nx.Graph:
+    def _build_graph(self, json_file_path: str) -> nx.Graph:
         """
         Build a graph from the provided JSON file.
 
