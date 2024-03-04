@@ -3,15 +3,13 @@ import tempfile
 import networkx as nx
 import simplekml
 
+
 class KMLGenerator:
     """
     A class for generating Keyhole Markup Language (KML) files representing graph data.
     """
 
-    # Default line width for the KML path
     LINE_WIDTH = int(os.getenv('LINE_WIDTH', default=3))
-
-    # Default line color for the KML path in hexadecimal format
     LINE_COLOR = os.getenv('LINE_COLOR', default='ff008cff')
 
     def __init__(self, graph: nx.Graph):

@@ -7,12 +7,6 @@ class GraphProcessor:
     """
 
     def __init__(self, graph: nx.Graph):
-        """
-        Initialize the GraphProcessor with a network graph.
-
-        Parameters:
-        - graph (nx.Graph): The network graph to be processed.
-        """
         self.graph = graph
 
     def find_closest_point(self, coord: tuple) -> tuple:
@@ -25,7 +19,6 @@ class GraphProcessor:
         Returns:
         - tuple: The coordinates of the closest point on the graph.
         """
-        # Use Euclidean distance to find the closest point on the graph
         closest_point = min(self.graph.nodes, key=lambda node: euclidean(coord, self.graph.nodes[node]['coordinates']))
         return closest_point
 
@@ -40,6 +33,5 @@ class GraphProcessor:
         Returns:
         - list: A list representing the nodes in the shortest path.
         """
-        # Use networkx library to compute the shortest path between the given nodes
         shortest_path = nx.shortest_path(self.graph, source=start, target=end)
         return shortest_path
