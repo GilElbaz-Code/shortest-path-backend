@@ -3,7 +3,7 @@ from scipy.spatial.distance import euclidean
 
 class GraphProcessor:
     """
-    A class for processing operations on a network graph, such as finding closest points and computing shortest paths.
+    A class for processing operations on a network graph, such as finding the closest points and computing the shortest paths.
     """
 
     def __init__(self, graph: nx.Graph):

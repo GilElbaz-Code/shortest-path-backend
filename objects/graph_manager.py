@@ -1,9 +1,10 @@
 import os
 from collections import namedtuple
 
-from graph_builder import GraphBuilder
-from graph_processor import GraphProcessor
-from kml_generator import KMLGenerator
+from objects.graph_builder import GraphBuilder
+from objects.graph_processor import GraphProcessor
+from objects.kml_generator import KMLGenerator
+
 
 class GraphManager:
     """
