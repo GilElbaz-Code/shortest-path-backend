@@ -1,45 +1,20 @@
-# Import necessary modules from Flask and custom components
-import json
-
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from constants import Constants
-from graph_builder import GraphBuilder
-from kml_generator import KMLGenerator
-from graph_processor import GraphProcessor
-from collections import namedtuple
+from graph_manager import GraphManager
 
-# Create a Flask web application instance
+# Create a Flask application instance
 app = Flask(__name__)
 
-# Enable CORS and expose "Content-Disposition" headers for handling cross-origin requests
+# Enable Cross-Origin Resource Sharing (CORS) for the application
 CORS(app, expose_headers=["Content-Disposition"])
 
-# Initialize graph components using custom modules
-graph_builder = GraphBuilder(json_file_path="./data/graph_example.json")
-graph_processor = GraphProcessor(graph=graph_builder.graph)
-kml_generator = KMLGenerator(graph=graph_builder.graph)
+# Create an instance of the GraphManager class for managing graphs
+graph_manager = GraphManager()
 
-# Define a namedtuple for coordinates with 'latitude' and 'longitude' fields
-Coordinates = namedtuple('Coordinates', ['latitude', 'longitude'])
-
-
-# Define a Flask route for handling POST requests to calculate the shortest path
+# Define a route for handling POST requests to calculate the shortest path
 @app.route('/calculate_shortest_path', methods=['POST'])
 def calculate_shortest_path():
-    """
-    Calculate the shortest path between two points and optionally generate a KML file.
-
-    Expected JSON format:
-    {
-        "start": {"x": "x_value", "y": "y_value"},
-        "end": {"x": "x_value", "y": "y_value"},
-        "kml": true/false
-    }
-
-    Returns:
-    - JSON response with the shortest path or KML file download link.
-    """
     try:
         # Retrieve JSON input from the POST request
         request_input = request.get_json()
@@ -49,36 +24,24 @@ def calculate_shortest_path():
         end = request_input.get('end')
         kml_requested = request_input.get('kml', False)
 
-        # Convert start and end coordinates to namedtuples
-        start = Coordinates(latitude=float(start.get('x')), longitude=float(start.get('y')))
-        end = Coordinates(latitude=float(end.get('x')), longitude=float(end.get('y')))
+        # Calculate the shortest path using the GraphManager
+        shortest_path = graph_manager.calculate_shortest_path(start=start, end=end, kml_requested=kml_requested)
 
-        # Find the closest points and compute the shortest path
-        closest_point_start = graph_processor.find_closest_point(coord=start)
-        closest_point_end = graph_processor.find_closest_point(coord=end)
-        shortest_path = graph_processor.compute_shortest_path(start=closest_point_start, end=closest_point_end)
-
-        # If KML is requested, generate the KML file and return as a downloadable attachment
-        if kml_requested:
-            kml_shortest_path = kml_generator.generate_kml_file(shortest_path=shortest_path)
-            return send_file(kml_shortest_path,
+        # If the result is a string, assume it's a file path and return it as a downloadable KML file
+        if isinstance(shortest_path, str):
+            return send_file(shortest_path,
                              mimetype=Constants.KML_MIMETYPE,
                              as_attachment=True,
                              download_name='shortest_path.kml'), 200
 
-        # If KML is not requested, return the JSON response with the shortest path
+        # If the result is not a string, assume it's a list of nodes representing the shortest path and return it as JSON
         return jsonify({'path': shortest_path}), 200
 
-    # Handle potential errors such as invalid input or computation failure
-    except AttributeError:
-        return jsonify({'error': 'start or end attributes are missing'}), 400
-    except json.JSONDecodeError:
-        return jsonify({'error': 'data is not in appropriate JSON format'}), 400
     except Exception as e:
+        # Handle unexpected errors and return a 500 Internal Server Error response with an error message
         error_message = f"An unexpected error occurred: {str(e)}"
         return jsonify({'error': error_message}), 500
 
-
-# Run the Flask application if the script is executed directly
+# Run the Flask application if this script is executed directly
 if __name__ == '__main__':
     app.run()

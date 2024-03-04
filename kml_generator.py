@@ -3,34 +3,35 @@ import tempfile
 import networkx as nx
 import simplekml
 
-
 class KMLGenerator:
     """
-        Class responsible for generating KML files for shortest path.
+    A class for generating Keyhole Markup Language (KML) files representing graph data.
     """
 
-    # Default values for line width and color obtained from environment variables
+    # Default line width for the KML path
     LINE_WIDTH = int(os.getenv('LINE_WIDTH', default=3))
+
+    # Default line color for the KML path in hexadecimal format
     LINE_COLOR = os.getenv('LINE_COLOR', default='ff008cff')
 
     def __init__(self, graph: nx.Graph):
         """
-        Initialize the KMLGenerator with a graph.
+        Initialize the KMLGenerator with a network graph.
 
         Parameters:
-        - graph (nx.Graph): The graph for which the KML will be generated.
+        - graph (nx.Graph): The network graph used for generating KML files.
         """
         self.graph = graph
 
     def _generate_kml_content(self, path: list) -> simplekml.Kml:
         """
-        Generate KML content for the given shortest path.
+        Generate KML content for the given path on the graph.
 
         Parameters:
-        - shortest_path (list): List of nodes representing the shortest path.
+        - path (list): A list representing the nodes in the shortest path.
 
         Returns:
-        - simplekml.Kml: The generated KML object.
+        - simplekml.Kml: A simplekml Kml object containing the generated KML content.
         """
         kml = simplekml.Kml()
 
@@ -39,7 +40,7 @@ class KMLGenerator:
             coordinates = data['coordinates']
             kml.newpoint(name=str(node), coords=[coordinates])
 
-        # Add a line for the shortest path
+        # Add a line representing the shortest path
         line = kml.newlinestring(name='Shortest Path', coords=[self.graph.nodes[node]['coordinates'] for node in path])
         line.style.linestyle.width = self.LINE_WIDTH
         line.style.linestyle.color = self.LINE_COLOR
@@ -48,19 +49,21 @@ class KMLGenerator:
 
     def generate_kml_file(self, shortest_path: list) -> str:
         """
-        Generate a KML file for the given shortest path and return the file path.
+        Generate a temporary KML file for the given shortest path.
 
         Parameters:
-        - shortest_path (list): List of nodes representing the shortest path.
+        - shortest_path (list): A list representing the nodes in the shortest path.
 
         Returns:
-        - str: The file path of the generated KML file.
+        - str: The path to the generated temporary KML file.
         """
         try:
+            # Create a named temporary KML file
             with tempfile.NamedTemporaryFile(suffix='.kml', mode='w', delete=False) as temp_kml:
                 kml_content = self._generate_kml_content(path=shortest_path)
                 temp_kml.write(kml_content.kml())
             return temp_kml.name
         except (IOError, OSError) as e:
+            # Handle errors and raise a RuntimeError with an appropriate error message
             error_message = str(e)
             raise RuntimeError(f"Failed to create temporary KML file: {error_message}")
