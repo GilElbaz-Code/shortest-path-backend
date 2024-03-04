@@ -30,8 +30,8 @@ def calculate_shortest_path():
 
     Expected JSON format:
     {
-        "start": {"x": latitude, "y": longitude},
-        "end": {"x": latitude, "y": longitude},
+        "start": {"x": "x_value", "y": "y_value"},
+        "end": {"x": "x_value", "y": "y_value"},
         "kml": true/false
     }
 

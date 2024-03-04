@@ -24,15 +24,15 @@ POST /calculate_shortest_path
 {
   "start": {"x": "x_value", "y": "y_value"},
   "end": {"x": "x_value", "y": "y_value"},
-  "include_kml": true/false
+  "kml": true/false
 }
 ```
 
-   start_point: Coordinates of the starting point.
+   start: Coordinates of the starting point.
    
-   end_point: Coordinates of the ending point.
+   end: Coordinates of the ending point.
    
-   include_kml: Boolean indicating whether to include a KML file in the response.
+   kml: Boolean indicating whether to include a KML file in the response.
 
 2. **Response:**
    The response will contain either the shortest path or a download link for the KML file.

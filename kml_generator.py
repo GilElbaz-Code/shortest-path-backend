@@ -22,7 +22,7 @@ class KMLGenerator:
         """
         self.graph = graph
 
-    def _generate_kml_content(self, shortest_path: list) -> simplekml.Kml:
+    def _generate_kml_content(self, path: list) -> simplekml.Kml:
         """
         Generate KML content for the given shortest path.
 
@@ -40,9 +40,7 @@ class KMLGenerator:
             kml.newpoint(name=str(node), coords=[coordinates])
 
         # Add a line for the shortest path
-        line = kml.newlinestring(name='Shortest Path', coords=[
-            self.graph.nodes[node]['coordinates'] for node in shortest_path
-        ])
+        line = kml.newlinestring(name='Shortest Path', coords=[self.graph.nodes[node]['coordinates'] for node in path])
         line.style.linestyle.width = self.LINE_WIDTH
         line.style.linestyle.color = self.LINE_COLOR
 
@@ -60,7 +58,7 @@ class KMLGenerator:
         """
         try:
             with tempfile.NamedTemporaryFile(suffix='.kml', mode='w', delete=False) as temp_kml:
-                kml_content = self._generate_kml_content(shortest_path=shortest_path)
+                kml_content = self._generate_kml_content(path=shortest_path)
                 temp_kml.write(kml_content.kml())
             return temp_kml.name
         except (IOError, OSError) as e:
