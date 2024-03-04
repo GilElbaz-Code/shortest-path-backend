@@ -1,4 +1,6 @@
 # Import necessary modules from Flask and custom components
+import json
+
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from constants import Constants
@@ -68,8 +70,12 @@ def calculate_shortest_path():
         return jsonify({'path': shortest_path}), 200
 
     # Handle potential errors such as invalid input or computation failure
-    except (ValueError, TypeError) as e:
-        error_message = str(e)
+    except AttributeError:
+        return jsonify({'error': 'start or end attributes are missing'}), 400
+    except json.JSONDecodeError:
+        return jsonify({'error': 'data is not in appropriate JSON format'}), 400
+    except Exception as e:
+        error_message = f"An unexpected error occurred: {str(e)}"
         return jsonify({'error': error_message}), 500
 
 
